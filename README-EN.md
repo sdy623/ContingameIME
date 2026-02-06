@@ -32,10 +32,10 @@ An unofficial continuation of [IngameIME](https://github.com/Windmill-City/Ingam
 
 ## Dependencies
 
-- Forge
-    - [Kotlin for Forge](https://www.curseforge.com/minecraft/mc-mods/kotlin-for-forge)
-    - [Cloth Config API (Forge)](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
-    - [Architectury API (Forge)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
+- NeoForge
+    - [Kotlin for NeoForge](https://www.curseforge.com/minecraft/mc-mods/kotlin-for-forge)
+    - [Cloth Config API (NeoForge)](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
+    - [Architectury API (NeoForge)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
 
 - Fabric
     - [Fabric Language Kotlin](https://www.curseforge.com/minecraft/mc-mods/fabric-language-kotlin)
