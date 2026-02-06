@@ -3,13 +3,13 @@ pluginManagement {
         mavenCentral()
         maven("https://maven.fabricmc.net")
         maven("https://maven.architectury.dev")
-        maven("https://files.minecraftforge.net/maven")
+        maven("https://maven.neoforged.net/releases")
         gradlePluginPortal()
     }
 }
 
 include("common")
 include("fabric")
-include("forge")
+include("neoforge")
 
 rootProject.name = "ContingameIME"

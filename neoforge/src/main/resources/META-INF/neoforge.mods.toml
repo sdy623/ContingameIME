@@ -1,0 +1,48 @@
+modLoader="kotlinforforge"
+loaderVersion="[5,)"
+
+license="LGPL-3.0"
+
+[[mods]]
+modId="ingameime"
+version="${version}"
+displayName="XPlus ContingameIME"
+description='''
+An unofficial continuation of an unofficial continuation of IngameIME.
+Enable IME in FullScreen Minecraft
+'''
+logoFile="icon.png"
+authors="ThinkingStudio, TexTrue, Wybxc, Windmill_City, Wudji"
+credits="Hendrix-Shen"
+displayURL="https://github.com/Wudji/XPlus-ContingameIME"
+
+[[mixins]]
+config="ingameime.neoforge.mixins.json"
+
+[[dependencies.ingameime]]
+modId="neoforge"
+type="required"
+versionRange="[21.3,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.ingameime]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.3,1.22)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.ingameime]]
+modId="architectury"
+type="required"
+versionRange="[14,)"
+ordering="AFTER"
+side="CLIENT"
+
+[[dependencies.ingameime]]
+modId="cloth_config"
+type="required"
+versionRange="[16,)"
+ordering="AFTER"
+side="CLIENT"
