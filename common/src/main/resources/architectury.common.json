@@ -1,3 +1,7 @@
 {
-  "accessWidener": "ingameime.accesswidener"
+  "accessWidener": "ingameime.accesswidener",
+  "enabled_platforms": [
+    "fabric",
+    "neoforge"
+  ]
 }

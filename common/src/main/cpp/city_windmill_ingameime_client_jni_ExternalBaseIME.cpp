@@ -1,5 +1,6 @@
-#include "IngameIME-JNI/IngameIME/IngameIME/BaseIME.h"
-#include "IngameIME-JNI/IngameIME/IngameIME/IMM.cpp"
+#include <Windows.h>
+#include "../../../../3rd/IngameIME/IngameIME/BaseIME.h"
+#include "../../../../3rd/IngameIME/IngameIME/IMM.cpp"
 #include "city_windmill_ingameime_client_jni_ExternalBaseIME.h"
 
 #define GLOBAL(x) env->NewGlobalRef(x)
@@ -16,11 +17,37 @@ jmethodID gmtd_onCandidateList = NULL;
 jmethodID gmtd_onComposition = NULL;
 jmethodID gmtd_onGetCompExt = NULL;
 jmethodID gmtd_onAlphaMode = NULL;
+jmethodID gmtd_onInputLanguage = NULL;
 //CompositionState
 jobject go_CompositionState_START = NULL;
 jobject go_CompositionState_UPDATE = NULL;
 jobject go_CompositionState_END = NULL;
 jobject go_CompositionState_COMMIT = NULL;
+
+enum InputLanguageCode
+{
+	INPUT_LANG_OTHER = 0,
+	INPUT_LANG_CHINESE = 1,
+	INPUT_LANG_JAPANESE = 2,
+	INPUT_LANG_ENGLISH = 3,
+};
+
+static jint get_input_language_code()
+{
+	HKL hkl = GetKeyboardLayout(0);
+	LANGID langId = LOWORD(hkl);
+	switch (PRIMARYLANGID(langId))
+	{
+	case LANG_CHINESE:
+		return INPUT_LANG_CHINESE;
+	case LANG_JAPANESE:
+		return INPUT_LANG_JAPANESE;
+	case LANG_ENGLISH:
+		return INPUT_LANG_ENGLISH;
+	default:
+		return INPUT_LANG_OTHER;
+	}
+}
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* jvm, void* reserved) {
 	jint result = -1;
@@ -72,7 +99,7 @@ void CALLBACK onCandidateList(libtf::CandidateList* list) {
 				env->SetObjectArrayElement(cand, i, str);
 			}
 		}
-		env->CallVoidMethod(go_ExternalBaseIME, gmtd_onCandidateList, cand);
+		env->CallVoidMethod(go_ExternalBaseIME, gmtd_onCandidateList, cand, (jint)list->m_lSelection);
 		});
 }
 
@@ -86,6 +113,9 @@ void CALLBACK onGetTextExt(PRECT prect) {
 void CALLBACK onAlphaMode(BOOL isAlphaMode) {
 	call_with_env([isAlphaMode](JNIEnv* env) {
 		env->CallVoidMethod(go_ExternalBaseIME, gmtd_onAlphaMode, isAlphaMode);
+		if (gmtd_onInputLanguage) {
+			env->CallVoidMethod(go_ExternalBaseIME, gmtd_onInputLanguage, get_input_language_code());
+		}
 	});
 }
 
@@ -131,16 +161,20 @@ JNIEXPORT void JNICALL Java_city_windmill_ingameime_client_jni_ExternalBaseIME_n
 	go_CompositionState_COMMIT = GLOBAL(STATICFIELD(clState, "Commit", clStateType));
 	//Callbacks
 	jclass clBaseIME = env->GetObjectClass(obj);
-	gmtd_onCandidateList = env->GetMethodID(clBaseIME, "onCandidateList", "([Ljava/lang/String;)V");
+	gmtd_onCandidateList = env->GetMethodID(clBaseIME, "onCandidateList", "([Ljava/lang/String;I)V");
 	gmtd_onComposition = env->GetMethodID(clBaseIME, "onComposition", "(Ljava/lang/String;ILcity/windmill/ingameime/client/jni/ExternalBaseIME$CompositionState;)V");
 	gmtd_onGetCompExt = env->GetMethodID(clBaseIME, "onGetCompExt", "()[I");
 	gmtd_onAlphaMode = env->GetMethodID(clBaseIME, "onAlphaMode", "(Z)V");
+	gmtd_onInputLanguage = env->GetMethodID(clBaseIME, "onInputLanguage", "(I)V");
 	//RegCallback
 	api->m_sigAlphaMode = onAlphaMode;
 	api->m_sigComposition = onComposition;
 	api->m_sigCandidateList = onCandidateList;
 	api->m_sigGetTextExt = onGetTextExt;
 	api->Initialize((HWND)hwnd);
+	if (gmtd_onInputLanguage) {
+		env->CallVoidMethod(go_ExternalBaseIME, gmtd_onInputLanguage, get_input_language_code());
+	}
 }
 
 JNIEXPORT void JNICALL Java_city_windmill_ingameime_client_jni_ExternalBaseIME_nUninitialize(JNIEnv* env, jobject)
