@@ -1,6 +1,6 @@
 plugins {
     java
-    id("architectury-plugin") version "3.4-SNAPSHOT"
+    id("architectury-plugin") version "3.4.162"
     id("dev.architectury.loom") version "1.7-SNAPSHOT" apply false
     id("me.shedaniel.unified-publishing") version "0.1.+" apply false
     kotlin("jvm") version "1.9.24" apply false
@@ -35,11 +35,25 @@ allprojects {
     group = rootProject.property("maven_group").toString()
 
     repositories {
-
+        mavenCentral()
+        maven("https://maven.fabricmc.net")
+        maven("https://maven.architectury.dev/")
+        maven("https://maven.neoforged.net/releases")
+        maven("https://maven.shedaniel.me/")
+        maven("https://maven.terraformersmc.com/releases/")
+        maven("https://thedarkcolour.github.io/KotlinForForge/")
     }
 
     dependencies {
         compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:${property("kotlin_version")}")
+    }
+
+    // Configure Java toolchain to use Java 21
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+        withSourcesJar()
     }
 
     tasks.withType<JavaCompile> {
@@ -47,9 +61,6 @@ allprojects {
         options.release.set(21)
     }
 
-    java {
-        withSourcesJar()
-    }
 
     val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
     compileKotlin.kotlinOptions {

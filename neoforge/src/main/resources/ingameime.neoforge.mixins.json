@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "plugin": "city.windmill.ingameime.neoforge.mixin.MixinConfigPlugin",
+  "minVersion": "0.8",
+  "package": "city.windmill.ingameime.neoforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MixinChatScreen",
+    "MixinEditBox",
+    "MixinEditScreen",
+    "MixinFullScreen",
+    "MixinKeyboardHandler",
+    "MixinMinecraft",
+    "MixinTextFieldWidget"
+  ],
+  "injectors": {
+    "defaultRequire": 0,
+    "maxShiftBy": 2
+  }
+}

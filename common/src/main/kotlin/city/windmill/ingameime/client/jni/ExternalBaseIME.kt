@@ -1,6 +1,7 @@
 package city.windmill.ingameime.client.jni
 
 import city.windmill.ingameime.IngameIMEClient
+import city.windmill.ingameime.client.KeyboardHelper
 import city.windmill.ingameime.client.handler.IMEHandler
 import city.windmill.ingameime.client.gui.OverlayScreen
 import net.minecraft.client.Minecraft
@@ -79,8 +80,8 @@ object ExternalBaseIME {
             CompositionState.Commit -> {
                 OverlayScreen.composition = null
                 iCommitListener.onCommit(str!!).onEach { ch ->
-                    Minecraft.getInstance().keyboardHandler
-                        .charTyped(Minecraft.getInstance().window.window, ch.code, 0)
+                    val handler = Minecraft.getInstance().keyboardHandler
+                    KeyboardHelper.sendCharTyped(handler, Minecraft.getInstance().window.window, ch.code, 0)
                 }
             }
             CompositionState.Start,

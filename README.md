@@ -2,9 +2,11 @@
 
 <img height="150" width="150" src="icon/400x400.png"/>
 
-# ContingameIME
+# XPlusContingameIME (Unofficial NeoForge Port)
 
-[IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft) 的非官方续更版。在全屏的Minecraft中使用输入法。
+[IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft) 的非官方 NeoForge 移植版本。在全屏的Minecraft中使用输入法。
+
+**注意：本版本仅支持 NeoForge 平台。原版同时支持 Fabric 和 NeoForge 的版本请访问 [原项目](https://github.com/Wudji/XPlus-ContingameIME)**
 
 ZH-CN / [EN-US](README-EN.md)
 
@@ -32,16 +34,11 @@ ZH-CN / [EN-US](README-EN.md)
 
 ## 依赖
 
-- Forge
-  - [Kotlin for Forge](https://www.curseforge.com/minecraft/mc-mods/kotlin-for-forge)
-  - [Cloth Config API (Forge)](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
-  - [Architectury API (Forge)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
+- NeoForge
+  - [Kotlin for NeoForge](https://www.curseforge.com/minecraft/mc-mods/kotlin-for-forge)
+  - [Cloth Config API (NeoForge)](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
+  - [Architectury API (NeoForge)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
 
-- Fabric
-  - [Fabric Language Kotlin](https://www.curseforge.com/minecraft/mc-mods/fabric-language-kotlin)
-  - [Cloth Config API (Fabric)](https://www.curseforge.com/minecraft/mc-mods/cloth-config)
-  - [Architectury API (Fabric)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
-  - [Satin API](https://www.curseforge.com/minecraft/mc-mods/satin-api) **（可选，与optifine不兼容）**
 
 ### 该模组需要VCRuntime141运行，请在微软的官方网站上下载  [下载链接](https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist)
 

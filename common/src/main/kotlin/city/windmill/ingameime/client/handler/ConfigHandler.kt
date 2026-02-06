@@ -1,6 +1,7 @@
 package city.windmill.ingameime.client.handler
 
 import city.windmill.ingameime.IngameIMEClient
+import city.windmill.ingameime.client.ChatScreenHelper
 import city.windmill.ingameime.client.jni.ExternalBaseIME
 import city.windmill.ingameime.client.jni.ICommitListener
 import com.google.gson.GsonBuilder
@@ -31,7 +32,7 @@ object ConfigHandler {
                         iEditstateListener = IEditStateListener { state ->
                             if (state == ScreenHandler.ScreenState.EditState.EDIT_OPEN
                                 && ScreenHandler.ScreenState.currentScreen is ChatScreen
-                                && (ScreenHandler.ScreenState.currentScreen as ChatScreen).initial == "/"
+                                && ChatScreenHelper.getInitial(ScreenHandler.ScreenState.currentScreen as ChatScreen) == "/"
                             ) {
                                 //Disable IME in Command Mode
                                 IMEHandler.IMEState.onEditState(ScreenHandler.ScreenState.EditState.NULL_EDIT)
