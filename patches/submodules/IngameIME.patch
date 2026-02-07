@@ -1,0 +1,49 @@
+diff --git a/IngameIME/IMM.cpp b/IngameIME/IMM.cpp
+index 1df30b2..36ec476 100644
+--- a/IngameIME/IMM.cpp
++++ b/IngameIME/IMM.cpp
+@@ -81,6 +81,12 @@ namespace IngameIME {
+ 				if (pageSize > 0 && candCount > 1) {
+ 					DWORD pageStart = candlist->dwPageStart;
+ 					DWORD pageEnd = pageStart + pageSize;
++					DWORD selection = candlist->dwSelection;
++					if (selection != 0xFFFFFFFF && selection >= pageStart && selection < pageEnd) {
++						m_CandidateList->m_lSelection = static_cast<LONG>(selection - pageStart);
++					} else {
++						m_CandidateList->m_lSelection = -1;
++					}
+ 
+ 					cand = new std::wstring[pageSize];
+ 
+@@ -102,6 +108,15 @@ namespace IngameIME {
+ 			m_sigCandidateList(m_CandidateList);
+ 		}
+ 
++		void updateAlphaMode()
++		{
++			DWORD conversion = 0;
++			BOOL open = ImmGetOpenStatus(m_context);
++			ImmGetConversionStatus(m_context, &conversion, NULL);
++			m_alphaMode = !open || !(conversion & IME_CMODE_NATIVE);
++			m_sigAlphaMode(m_alphaMode);
++		}
++
+ 		LRESULT handleWndMsg(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+ 			switch (msg)
+ 			{
+@@ -167,11 +182,11 @@ namespace IngameIME {
+ 					m_CandidateList->Reset();
+ 					m_sigCandidateList(m_CandidateList);
+ 					goto Handled;
++				case IMN_SETOPENSTATUS:
++					updateAlphaMode();
++					goto Handled;
+ 				case IMN_SETCONVERSIONMODE:
+-					DWORD dwConversion;
+-					ImmGetConversionStatus(m_context, &dwConversion, NULL);
+-					m_alphaMode = !(dwConversion & IME_CMODE_NATIVE);
+-					m_sigAlphaMode(m_alphaMode);
++					updateAlphaMode();
+ 				default:
+ 					break;
+ 				}

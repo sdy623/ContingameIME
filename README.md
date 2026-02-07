@@ -4,13 +4,21 @@
 
 # XPlusContingameIME (Unofficial NeoForge Port)
 
-[IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft) 的非官方 NeoForge 移植版本。在全屏的Minecraft中使用输入法。
+本模组是 [IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft) 的非官方 NeoForge 移植版本。在全屏的Minecraft中使用输入法，并在原版基础上进行了一些修复和改进。
 
-**注意：本版本仅支持 NeoForge 平台。原版同时支持 Fabric 和 NeoForge 的版本请访问 [原项目](https://github.com/Wudji/XPlus-ContingameIME)**
+**注意：本版本仅支持 NeoForge 平台。支持 Fabric 的版本请访问 [原项目](https://github.com/Wudji/XPlus-ContingameIME)**
 
 ZH-CN / [EN-US](README-EN.md)
 
 </div></center>
+
+# 特色
+
+- 现在可以在 NeoForge loader (Minecraft 1.21-1.21.3) 上使用本模组。
+- 输入法语言不再直接检测客户端语言，而是检测实际输入法。
+- 候选框选中项高亮显示。
+- 修复安装 Caxton 和 Modern UI 后输入框不跟随光标的 bug。
+- 找回 JNI DLL 源代码与构建参数，重构项目目录，并使用 git submodules 管理以增强可维护性。
 
 # 图片展示
 
@@ -32,6 +40,10 @@ ZH-CN / [EN-US](README-EN.md)
 - 双击快捷键，切换到**开启模式**。
 - 当鼠标移动并有事情发生时，**临时输入状态**切换到**关闭状态**。
 
+# 构建指南
+
+- 参见 [BUILD_GUIDE.md](BUILD_GUIDE.md)
+
 ## 依赖
 
 - NeoForge
@@ -44,4 +56,5 @@ ZH-CN / [EN-US](README-EN.md)
 
 # 代码使用/引用
 - [Windmill-City/IngameIME-Minecraft](https://github.com/Windmill-City/IngameIME-Minecraft) (LGPL-2.1)
+- [Windmill-City/IngameIME](https://github.com/Windmill-City/IngameIME) (LGPL-2.1)
 - [Wybxc/IngameIME-Minecraft](https://github.com/Wybxc/IngameIME-Minecraft) (LGPL-2.1)

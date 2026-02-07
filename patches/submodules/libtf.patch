@@ -1,0 +1,30 @@
+diff --git a/libtf/CandidateListHandler.hpp b/libtf/CandidateListHandler.hpp
+index 65a7f26..15868ab 100644
+--- a/libtf/CandidateListHandler.hpp
++++ b/libtf/CandidateListHandler.hpp
+@@ -7,6 +7,7 @@ namespace libtf {
+ 	{
+ 	public:
+ 		LONG								m_lPageSize;
++		LONG								m_lSelection;
+ 		std::shared_ptr<std::wstring[]>		m_pCandidates;//PageSize indicates its array length
+ 
+ 		CandidateList() {
+@@ -16,6 +17,7 @@ namespace libtf {
+ 		VOID Reset()
+ 		{
+ 			m_lPageSize = 0;;
++			m_lSelection = -1;
+ 			m_pCandidates.reset();
+ 		}
+ 	};
+@@ -91,6 +93,9 @@ namespace libtf {
+ 
+ 					UINT start = startIndexs[cpage];
+ 					UINT end = start + pageSize;
++					m_pCandidateList->m_lSelection = (csel >= start && csel < end)
++						? static_cast<LONG>(csel - start)
++						: -1;
+ 
+ 					m_pCandidateList->m_pCandidates.reset(new std::wstring[pageSize]);
+ 					int j = 0;

@@ -4,13 +4,21 @@
 
 # XPlusContingameIME (Unofficial NeoForge Port)
 
-An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XPlus-ContingameIME). Use input method in full screen Minecraft.
+An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XPlus-ContingameIME). Use input method in full screen Minecraft, with fixes and improvements over the original.
 
-**Note: This version only supports NeoForge. For the original version supporting both Fabric and NeoForge, please visit the [original project](https://github.com/Wudji/XPlus-ContingameIME)**
+**Note: This version only supports NeoForge. For the original version supporting both Fabric, please visit the [original project](https://github.com/Wudji/XPlus-ContingameIME)**
 
 [ZH-CN](README.md) / EN-US
 
 </div></center>
+
+# Highlights
+
+- Now works on the NeoForge loader (Minecraft 1.21-1.21.3).
+- Detects the active IME instead of brute-checking the client locale.
+- Candidate list uses a clear selection highlight.
+- Fixes caret tracking when Caxton or Modern UI is installed.
+- JNI DLL source and build parameters are included; project layout is refactored and managed via git submodules for better maintainability.
 
 # Preview
 
@@ -32,6 +40,10 @@ An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XP
 - Double-click the hot key to switch to **open mode**
 - **temporary input state** switch to **closed State** when mouse move and something was committed
 
+# Build Guide
+
+- See [BUILD_GUIDE_EN.md](BUILD_GUIDE_EN.md)
+
 ## Dependencies
 
 - NeoForge
@@ -45,4 +57,5 @@ An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XP
 # This mod code reference/use
 
 - [Windmill-City/IngameIME-Minecraft](https://github.com/Windmill-City/IngameIME-Minecraft) (LGPL-2.1)
+- [Windmill-City/IngameIME](https://github.com/Windmill-City/IngameIME) (LGPL-2.1)
 - [Wybxc/IngameIME-Minecraft](https://github.com/Wybxc/IngameIME-Minecraft) (LGPL-2.1)

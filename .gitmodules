@@ -1,0 +1,12 @@
+[submodule "3rd/IngameIME"]
+	path = 3rd/IngameIME
+	url = https://github.com/Windmill-City/IngameIME.git
+[submodule "3rd/IngameIME_Win32"]
+	path = 3rd/IngameIME_Win32
+	url = https://github.com/Windmill-City/IngameIME_Win32.git
+[submodule "3rd/IngameIME-Common"]
+	path = 3rd/IngameIME-Common
+	url = https://github.com/Windmill-City/IngameIME-Common.git
+[submodule "3rd/IngameIME-rs"]
+	path = 3rd/IngameIME-rs
+	url = https://github.com/Windmill-City/IngameIME-rs.git
