@@ -28,5 +28,5 @@ jobs:
       - name: Upload artifacts (fabric)
         uses: actions/upload-artifact@v6
         with:
-          name: 1.20.x-fabric
-          path: ${{ github.workspace }}/fabric/build/libs
+          name: 1.21.x-neoforge
+          path: ${{ github.workspace }}/neoforge/build/libs
