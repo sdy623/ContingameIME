@@ -13,7 +13,7 @@ pluginManagement {
 }
 
 include("common")
-// include("fabric")  // Fabric 平台已屏蔽
+include("fabric")
 include("neoforge")
 
 rootProject.name = "ContingameIME"

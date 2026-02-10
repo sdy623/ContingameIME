@@ -2,6 +2,16 @@
 # Ensure submodules are present, then apply staged patches.
 repo_root="$(git rev-parse --show-toplevel)"
 
-git submodule update --init --recursive
+# Step 1: init submodules (non-recursive)
+git submodule update --init
 
+# Ensure nested submodules exist (still non-recursive) so patches can touch their config.
+if [ -d "$repo_root/3rd/IngameIME_Win32" ]; then
+	git -C "$repo_root/3rd/IngameIME_Win32" submodule update --init
+fi
+
+# Step 2: apply patches (including SSH->HTTPS .gitmodules fixes)
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$repo_root/tools/apply_submodule_patches.ps1"
+
+# Step 3: now recursively download everything (HTTPS URLs already patched)
+git submodule update --init --recursive

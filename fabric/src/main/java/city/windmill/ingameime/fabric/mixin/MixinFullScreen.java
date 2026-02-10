@@ -18,6 +18,7 @@ class MixinFullScreen {
 
     @Inject(method = "resizeDisplay", at = @At("RETURN"))
     private void onScreenSizeChanged(CallbackInfo ci) {
-        ClientScreenEventHooks.INSTANCE.getWINDOW_SIZE_CHANGED().invoker().onWindowSizeChanged(window.getWidth(), window.getHeight());
+        ClientScreenEventHooks.INSTANCE.getWINDOW_SIZE_CHANGED().invoker().onWindowSizeChanged(window.getWidth(),
+                window.getHeight());
     }
 }

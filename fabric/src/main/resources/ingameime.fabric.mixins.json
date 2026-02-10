@@ -10,6 +10,7 @@
     "MixinEditBox",
     "MixinEditScreen",
     "MixinFullScreen",
+    "MixinKeyboardHandler",
     "MixinMinecraft",
     "MixinScreen",
     "MixinSignEditScreen",

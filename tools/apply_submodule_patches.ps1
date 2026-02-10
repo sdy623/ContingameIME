@@ -9,7 +9,10 @@ $patchDir = Join-Path $root "patches/submodules"
 
 $targets = @(
     @{ Name = "IngameIME"; Path = Join-Path $root "3rd/IngameIME"; Patch = Join-Path $patchDir "IngameIME.patch" },
-    @{ Name = "libtf"; Path = Join-Path $root "3rd/IngameIME/libtf"; Patch = Join-Path $patchDir "libtf.patch" }
+    @{ Name = "libtf"; Path = Join-Path $root "3rd/IngameIME/libtf"; Patch = Join-Path $patchDir "libtf.patch" },
+    @{ Name = "IngameIME_Win32"; Path = Join-Path $root "3rd/IngameIME_Win32"; Patch = Join-Path $patchDir "IngameIME_Win32.patch" },
+    @{ Name = "IngameIME-Common"; Path = Join-Path $root "3rd/IngameIME-Common"; Patch = Join-Path $patchDir "IngameIME-Common.patch" },
+    @{ Name = "IngameIME-Common (Win32)"; Path = Join-Path $root "3rd/IngameIME_Win32/IngameIME-Common"; Patch = Join-Path $patchDir "IngameIME-Common.patch" }
 )
 
 foreach ($t in $targets) {

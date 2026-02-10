@@ -1,7 +1,6 @@
 package city.windmill.ingameime.fabric.mixin;
 
 import city.windmill.ingameime.client.event.ClientScreenEventHooks;
-import com.llamalad7.mixinextras.sugar.Local;
 import kotlin.Pair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -12,8 +11,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(EditBox.class)
 abstract class MixinEditBox extends AbstractWidget {
@@ -76,11 +76,15 @@ abstract class MixinEditBox extends AbstractWidget {
         updateCaretPosition();
     }
 
-    @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "java/lang/String.isEmpty()Z", ordinal = 1))
-    private void onCaret(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci,
-            @Local(ordinal = 4) int x,
-            @Local(ordinal = 5) int y) {
-        ClientScreenEventHooks.INSTANCE.getEDIT_CARET().invoker().onEditCaret(this, new Pair<>(x, y));
+    @ModifyArgs(method = "renderWidget", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;fill(IIIII)V"))
+    private void onCaretFill(Args args) {
+        int x1 = args.get(0);
+        int y1 = args.get(1);
+        int x2 = args.get(2);
+        int y2 = args.get(3);
+        if (x2 - x1 <= 1 && y2 - y1 >= 1) {
+            ClientScreenEventHooks.INSTANCE.getEDIT_CARET().invoker().onEditCaret(this, new Pair<>(x1, y1));
+        }
     }
 
     private int computeCaretX() {

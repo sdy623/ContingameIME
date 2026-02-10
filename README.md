@@ -16,7 +16,8 @@ ZH-CN / [EN-US](README-EN.md)
 
 - 现在可以在 NeoForge loader (Minecraft 1.21-1.21.3) 上使用本模组。
 - 输入法语言不再直接检测客户端语言，而是检测实际输入法。
-- 候选框选中项高亮显示。
+- 候选框选中项高亮显示，高亮颜色可在配置中自定义。
+- 修复了切换全屏重启后 IME 候选框不显示的 bug。
 - 修复安装 Caxton 和 Modern UI 后输入框不跟随光标的 bug。
 - 找回 JNI DLL 源代码与构建参数，重构项目目录，并使用 git submodules 管理以增强可维护性。
 
@@ -53,6 +54,14 @@ ZH-CN / [EN-US](README-EN.md)
 
 
 ### 该模组需要VCRuntime141运行，请在微软的官方网站上下载  [下载链接](https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist)
+
+# 测试环境
+
+本模组已在以下输入法环境下测试：
+- 微软拼音输入法
+- Japanese IME（日语输入法）
+
+其他输入法可能也能正常工作，但未经全面测试。
 
 # 代码使用/引用
 - [Windmill-City/IngameIME-Minecraft](https://github.com/Windmill-City/IngameIME-Minecraft) (LGPL-2.1)

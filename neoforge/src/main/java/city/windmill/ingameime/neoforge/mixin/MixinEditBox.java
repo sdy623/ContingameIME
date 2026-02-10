@@ -1,7 +1,6 @@
 package city.windmill.ingameime.neoforge.mixin;
 
 import city.windmill.ingameime.client.event.ClientScreenEventHooks;
-import com.llamalad7.mixinextras.sugar.Local;
 import kotlin.Pair;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;

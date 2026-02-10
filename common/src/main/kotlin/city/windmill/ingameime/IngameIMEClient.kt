@@ -23,6 +23,54 @@ object IngameIMEClient {
      */
     private var prevX = 0
     private var prevY = 0
+    
+    /**
+     * Flag to ensure IME is initialized once on first frame render
+     * This is the most robust approach: by the time the first frame renders,
+     * GLFW window creation is complete and Windows message loop is fully initialized
+     */
+    private var firstFrameRendered = false
+
+    /**
+     * Second safety net (FocusHook): kick IME again on first real user interaction
+     * (mouse move / key press). This covers cases where the first-frame kick still
+     * races with late focus/input-mode adjustments.
+     */
+    private var interactionKicked = false
+
+    /**
+     * Third safety net (Retry Loop): a few delayed kicks after first frame.
+     */
+    private var imeKickAttemptsRemaining = 0
+    private var nextImeKickAtMs = 0L
+
+    private var kickAttempt = 0
+
+    private fun kickIme(reason: String) {
+        try {
+            if (ExternalBaseIME.hasAttachedOnce()) return
+
+            kickAttempt += 1
+            ExternalBaseIME.noteKickAttempt(kickAttempt)
+
+            val window = Minecraft.getInstance().window
+            ExternalBaseIME.FullScreen = window.isFullscreen
+            ExternalBaseIME.setPreEditRect(OverlayScreen.compositionExt)
+
+            ExternalBaseIME.State = true
+            ExternalBaseIME.State = false
+
+            // Failures/retries stay DEBUG-only; success is logged once from ExternalBaseIME.onAlphaMode.
+            LOGGER.debug("IME kick attempt #{} ({})", kickAttempt, reason)
+        } catch (t: Throwable) {
+            LOGGER.warn("IME kick failed: {}", reason, t)
+        }
+    }
+
+    private fun scheduleImeRetryLoop(attempts: Int, delayMs: Long) {
+        imeKickAttemptsRemaining = attempts
+        nextImeKickAtMs = System.currentTimeMillis() + delayMs
+    }
 
     fun registerConfigScreen() {
         Platform.getMod(MODID).registerConfigurationScreen { parent ->
@@ -33,8 +81,30 @@ object IngameIMEClient {
     fun onInitClient() {
         ConfigHandler.initialConfig()
         ClientGuiEvent.RENDER_POST.register(ClientGuiEvent.ScreenRenderPost { _, matrices, mouseX, mouseY, delta ->
+            // Ensure IME is initialized on first frame render
+            // By this point, GLFW window is fully created and Windows message loop is ready
+            if (!firstFrameRendered) {
+                firstFrameRendered = true
+                kickIme("first-frame")
+                // A few retries in case something (GLFW/Windows focus/input-mode) changes right after.
+                scheduleImeRetryLoop(attempts = 3, delayMs = 250)
+            } else if (imeKickAttemptsRemaining > 0 && !ExternalBaseIME.hasAttachedOnce()) {
+                val now = System.currentTimeMillis()
+                if (now >= nextImeKickAtMs) {
+                    imeKickAttemptsRemaining -= 1
+                    kickIme("retry-${imeKickAttemptsRemaining}")
+                    nextImeKickAtMs = now + 500
+                }
+            } else if (imeKickAttemptsRemaining > 0 && ExternalBaseIME.hasAttachedOnce()) {
+                imeKickAttemptsRemaining = 0
+            }
+            
             //Track mouse move here
             if (mouseX != prevX || mouseY != prevY) {
+                if (!interactionKicked && firstFrameRendered && !ExternalBaseIME.hasAttachedOnce()) {
+                    interactionKicked = true
+                    kickIme("interaction-mouse-move")
+                }
                 ClientScreenEventHooks.SCREEN_MOUSE_MOVE.invoker().onMouseMove(prevX, prevY, mouseX, mouseY)
 
                 prevX = mouseX
@@ -47,6 +117,10 @@ object IngameIMEClient {
             IMEHandler.IMEState.onMouseMove()
         })
         ClientScreenInputEvent.KEY_PRESSED_PRE.register(ClientScreenInputEvent.KeyPressed { _, _, keyCode, scanCode, modifiers ->
+            if (!interactionKicked && firstFrameRendered && !ExternalBaseIME.hasAttachedOnce()) {
+                interactionKicked = true
+                kickIme("interaction-key-press")
+            }
             if (KeyHandler.KeyState.onKeyDown(keyCode, scanCode, modifiers))
                 EventResult.interruptDefault()
             else

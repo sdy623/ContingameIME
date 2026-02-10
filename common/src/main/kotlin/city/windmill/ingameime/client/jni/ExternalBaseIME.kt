@@ -19,12 +19,28 @@ fun interface ICommitListener {
 object ExternalBaseIME {
     private val LOGGER = LogManager.getFormatterLogger(IngameIMEClient.MODNAME + "|ExternalBaseIME")!!
 
+    private var lastPreEditRectLogAtMs: Long = 0
+    private var lastPreEditRectKey: String? = null
+
+    @Volatile
+    private var attachSuccessLogged = false
+
+    @Volatile
+    private var lastKickAttempt = 0
+
+    fun noteKickAttempt(attempt: Int) {
+        if (attempt > lastKickAttempt) lastKickAttempt = attempt
+    }
+
+    fun hasAttachedOnce(): Boolean = attachSuccessLogged
+
     var iCommitListener: ICommitListener = IMEHandler.IMEState
 
     var State: Boolean = false
         set(value) {
             LOGGER.trace("State $field -> $value")
             field = value
+            LOGGER.debug("nSetState(%s)", field)
             nSetState(field)
             OverlayScreen.showAlphaMode = field
         }
@@ -33,8 +49,10 @@ object ExternalBaseIME {
         set(value) {
             LOGGER.trace("FullScreen $field -> $value")
             field = value
+            LOGGER.debug("nSetFullScreen(%s)", field)
             nSetFullScreen(field)
             if (State) {
+                LOGGER.debug("FullScreen changed while State=true; toggling State to refresh context")
                 State = false
                 State = true
             }
@@ -61,9 +79,13 @@ object ExternalBaseIME {
             */
             val resourceNative = ResourceLocation.fromNamespaceAndPath("ingameime", "natives/jni.dll")
             NativeLoader.load(Minecraft.getInstance().resourceManager.getResource(resourceNative).orElseThrow())
-            LOGGER.debug("Initialing window")
-            nInitialize(glfwGetWin32Window(Minecraft.getInstance().window.window))
-            FullScreen = Minecraft.getInstance().window.isFullscreen
+            val win = Minecraft.getInstance().window
+            val hwnd = glfwGetWin32Window(win.window)
+            val isFullscreen = win.isFullscreen
+            LOGGER.debug("Initializing native IME: hwnd=0x%X fullscreen=%s", hwnd, isFullscreen)
+            nInitialize(hwnd)
+            FullScreen = isFullscreen
+            LOGGER.debug("Native IME initialized: State=%s FullScreen=%s", State, FullScreen)
         } catch (ex: Exception) {
             LOGGER.error("Failed in initializing ExternalBaseIME:", ex)
         }
@@ -76,17 +98,38 @@ object ExternalBaseIME {
     private external fun nUninitialize()
     private external fun nSetState(state: Boolean)
     private external fun nSetFullScreen(fullscreen: Boolean)
+    private external fun nSetPreEditRect(rect: IntArray)
+
+    fun setPreEditRect(rect: IntArray) {
+        val now = System.currentTimeMillis()
+        val key = if (rect.size >= 4) "${rect[0]},${rect[1]},${rect[2]},${rect[3]}" else rect.joinToString(",")
+        if (key != lastPreEditRectKey || (now - lastPreEditRectLogAtMs) > 750) {
+            lastPreEditRectKey = key
+            lastPreEditRectLogAtMs = now
+            LOGGER.debug("nSetPreEditRect([%s])", key)
+        }
+        nSetPreEditRect(rect)
+    }
     //endregion
 
     //region CallFrom JNI
     @Suppress("unused")
     private fun onCandidateList(candidates: Array<String>?, selectedIndex: Int) {
+        val count = candidates?.size ?: 0
+        val head = candidates?.firstOrNull()
+        LOGGER.debug("onCandidateList(count=%s selected=%s head=%s)", count, selectedIndex, head)
         OverlayScreen.candidates = candidates
         OverlayScreen.selectedCandidateIndex = selectedIndex
     }
 
     @Suppress("unused")
     private fun onComposition(str: String?, caret: Int, state: CompositionState) {
+        LOGGER.debug(
+            "onComposition(state=%s caret=%s len=%s)",
+            state,
+            caret,
+            str?.length ?: 0
+        )
         when (state) {
             CompositionState.Commit -> {
                 OverlayScreen.composition = null
@@ -106,17 +149,30 @@ object ExternalBaseIME {
 
     @Suppress("unused")
     private fun onGetCompExt(): IntArray {
-        return OverlayScreen.compositionExt
+        val ext = OverlayScreen.compositionExt
+        if (ext.size >= 4) {
+            LOGGER.trace("onGetCompExt -> [%s,%s,%s,%s]", ext[0], ext[1], ext[2], ext[3])
+        } else {
+            LOGGER.trace("onGetCompExt -> size=%s", ext.size)
+        }
+        return ext
     }
 
     @Suppress("unused")
     private fun onAlphaMode(isAlphaMode: Boolean) {
+        if (!attachSuccessLogged) {
+            attachSuccessLogged = true
+            val retries = (lastKickAttempt - 1).coerceAtLeast(0)
+            LOGGER.info("[Kitsune] IME Context attached successfully after %s retries.", retries)
+        }
+        LOGGER.debug("onAlphaMode(%s)", isAlphaMode)
         AlphaMode = isAlphaMode
         OverlayScreen.showAlphaMode = true
     }
 
     @Suppress("unused")
     private fun onInputLanguage(code: Int) {
+        LOGGER.debug("onInputLanguage(code=%s)", code)
         InputLanguage = InputLang.fromCode(code)
         OverlayScreen.showAlphaMode = true
     }

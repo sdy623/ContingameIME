@@ -15,13 +15,27 @@ fun interface IEditStateListener {
 
 object ScreenHandler {
     private val LOGGER = LogManager.getFormatterLogger(IngameIMEClient.MODNAME + "|ScreenHandler")!!
+
+    private fun isDummyEditScreen(screen: Screen): Boolean {
+        // Sign edit screens are "no-component" text UIs (no EditBox). Treat them as editable.
+        // Use name-based detection to stay tolerant across mappings/loader variations.
+        val name = screen.javaClass.name
+        return name == "net.minecraft.client.gui.screens.inventory.SignEditScreen"
+            || name == "net.minecraft.client.gui.screens.inventory.HangingSignEditScreen"
+            || (name.startsWith("net.minecraft.client.gui.screens.inventory.") && name.endsWith("SignEditScreen"))
+    }
     
     enum class ScreenState {
         NULL_SCREEN {
             override fun onScreenChange(oldScreen: Screen?, newScreen: Screen?): ScreenState {
                 newScreen?.let {
                     currentScreen = newScreen
-                    return SCREEN_OPEN
+                    return if (isDummyEditScreen(newScreen)) {
+                        LOGGER.trace("DummyEdit screen detected: {}", newScreen)
+                        SCREEN_DUMMY_EDIT
+                    } else {
+                        SCREEN_OPEN
+                    }
                 }
                 return this
             }
@@ -31,7 +45,12 @@ object ScreenHandler {
                 newScreen?.let {
                     screenState = NULL_SCREEN //ScreenChange close old one
                     currentScreen = newScreen
-                    return this
+                    return if (isDummyEditScreen(newScreen)) {
+                        LOGGER.trace("DummyEdit screen detected: {}", newScreen)
+                        SCREEN_DUMMY_EDIT
+                    } else {
+                        this
+                    }
                 }
                 OverlayScreen.caretPos = 0 to 0
                 return NULL_SCREEN
@@ -42,7 +61,12 @@ object ScreenHandler {
                 newScreen?.let {
                     screenState = NULL_SCREEN //ScreenChange close old one
                     currentScreen = newScreen
-                    return this
+                    return if (isDummyEditScreen(newScreen)) {
+                        LOGGER.trace("DummyEdit screen detected: {}", newScreen)
+                        this
+                    } else {
+                        SCREEN_OPEN
+                    }
                 }
                 OverlayScreen.caretPos = 0 to 0
                 return NULL_SCREEN
@@ -63,7 +87,7 @@ object ScreenHandler {
             fun onScreenChange(oldScreen: Screen?, newScreen: Screen?) {
                 LOGGER.trace("{} -> {}", oldScreen, newScreen)
                 screenState = screenState.onScreenChange(oldScreen, newScreen)
-            }
+             }
         }
         
         abstract fun onScreenChange(oldScreen: Screen?, newScreen: Screen?): ScreenState

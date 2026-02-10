@@ -18,6 +18,9 @@ configurations {
     compileClasspath.get().extendsFrom(configurations["common"])
     runtimeClasspath.get().extendsFrom(configurations["common"])
     developmentNeoForge.extendsFrom(configurations["common"])
+    // Avoid duplicate fml_loader modules from raw vs transformed loader jars.
+    runtimeClasspath.get().exclude(group = "net.neoforged.fancymodloader", module = "loader")
+    developmentNeoForge.exclude(group = "net.neoforged.fancymodloader", module = "loader")
 }
 
 repositories {

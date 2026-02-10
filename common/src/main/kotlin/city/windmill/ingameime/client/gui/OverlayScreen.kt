@@ -68,6 +68,8 @@ object OverlayScreen : net.minecraft.client.gui.components.Renderable {
             compositionWidget.compositionData = value
             compositionWidget.adjustPos()
             candidateListWidget.adjustPosByComposition()
+            // Inform native side about composition ext so TSF can position candidate windows
+            ExternalBaseIME.setPreEditRect(compositionExt)
         }
 
     /**

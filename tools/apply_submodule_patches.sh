@@ -12,6 +12,9 @@ patch_dir="$root_dir/patches/submodules"
 targets=(
   "IngameIME|$root_dir/3rd/IngameIME|$patch_dir/IngameIME.patch"
   "libtf|$root_dir/3rd/IngameIME/libtf|$patch_dir/libtf.patch"
+  "IngameIME_Win32|$root_dir/3rd/IngameIME_Win32|$patch_dir/IngameIME_Win32.patch"
+  "IngameIME-Common|$root_dir/3rd/IngameIME-Common|$patch_dir/IngameIME-Common.patch"
+  "IngameIME-Common (Win32)|$root_dir/3rd/IngameIME_Win32/IngameIME-Common|$patch_dir/IngameIME-Common.patch"
 )
 
 for t in "${targets[@]}"; do

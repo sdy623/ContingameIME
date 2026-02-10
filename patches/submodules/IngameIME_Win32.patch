@@ -1,0 +1,135 @@
+diff --git a/.gitmodules b/.gitmodules
+index 002d955..0e7731a 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -1,3 +1,3 @@
+ [submodule "IngameIME-Common"]
+ 	path = IngameIME-Common
+-	url = git@github.com:Windmill-City/IngameIME-Common.git
++	url = https://github.com/Windmill-City/IngameIME-Common.git
+diff --git a/include/tf/TfInputModeHandler.hpp b/include/tf/TfInputModeHandler.hpp
+index 42f2e5e..f697f7c 100644
+--- a/include/tf/TfInputModeHandler.hpp
++++ b/include/tf/TfInputModeHandler.hpp
+@@ -23,6 +23,9 @@ class InputModeHandler
+     ComPtr<ITfCompartment>      mode;
+     DWORD                       cookieMode{TF_INVALID_COOKIE};
+ 
++    ComPtr<ITfCompartment> openClose;
++    DWORD                  cookieOpenClose{TF_INVALID_COOKIE};
++
+   public:
+     InputMode inputMode = InputMode::AlphaNumeric;
+ 
+diff --git a/src/TfInputModeHandler.cpp b/src/TfInputModeHandler.cpp
+index 1ace5c5..5599c71 100644
+--- a/src/TfInputModeHandler.cpp
++++ b/src/TfInputModeHandler.cpp
+@@ -5,6 +5,29 @@
+ 
+ namespace IngameIME::tf
+ {
++static bool get_compartment_bool(ITfCompartment* comp)
++{
++    if (!comp) return false;
++    VARIANT var;
++    VariantInit(&var);
++    if (FAILED(comp->GetValue(&var))) return false;
++    // Most TSF compartments use VT_I4.
++    if (var.vt == VT_I4) return var.lVal != 0;
++    if (var.vt == VT_INT) return var.intVal != 0;
++    return false;
++}
++
++static int get_compartment_int(ITfCompartment* comp)
++{
++    if (!comp) return 0;
++    VARIANT var;
++    VariantInit(&var);
++    if (FAILED(comp->GetValue(&var))) return 0;
++    if (var.vt == VT_I4) return (int)var.lVal;
++    if (var.vt == VT_INT) return (int)var.intVal;
++    return 0;
++}
++
+ InputModeHandler::InputModeHandler(InputContextImpl* inputCtx)
+     : inputCtx(inputCtx)
+ {
+@@ -15,19 +38,26 @@ InputModeHandler::InputModeHandler(InputContextImpl* inputCtx)
+ 
+     compMgr = threadMgr;
+     CHECK_HR(compMgr->GetCompartment(GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION, &mode));
++    CHECK_HR(compMgr->GetCompartment(GUID_COMPARTMENT_KEYBOARD_OPENCLOSE, &openClose));
+ 
+     ComQIPtr<ITfSource> source(IID_ITfSource, mode);
+     CHECK_HR(source->AdviseSink(IID_ITfCompartmentEventSink, static_cast<ITfCompartmentEventSink*>(this), &cookieMode));
+ 
+-    VARIANT var;
+-    mode->GetValue(&var);
++    ComQIPtr<ITfSource> sourceOpenClose(IID_ITfSource, openClose);
++    CHECK_HR(sourceOpenClose->AdviseSink(IID_ITfCompartmentEventSink, static_cast<ITfCompartmentEventSink*>(this), &cookieOpenClose));
+ 
+-    if (var.intVal & TF_CONVERSIONMODE_NATIVE)
+-    {
+-        inputMode = InputMode::Native;
+-    }
+-    else
++    // Determine initial mode.
++    // InputMode here means: do we expect TSF to deliver composition/commit (Native),
++    // or should the app receive raw keyboard input (AlphaNumeric).
++    // For Japanese IME, the IME can be "open" while still being in Alphanumeric mode,
++    // so we must not force Native purely based on open/close.
++    const bool imeOpen = get_compartment_bool(openClose.get());
++    const int conv = get_compartment_int(mode.get());
++
++    if (!imeOpen)
+         inputMode = InputMode::AlphaNumeric;
++    else
++        inputMode = (conv & TF_CONVERSIONMODE_NATIVE) ? InputMode::Native : InputMode::AlphaNumeric;
+ 
+     COM_HR_END();
+     COM_HR_THR();
+@@ -43,25 +73,34 @@ void InputModeHandler::UnadviseSink()
+         cookieMode = TF_INVALID_COOKIE;
+         COM_HR_END();
+     }
++
++    if (cookieOpenClose != TF_INVALID_COOKIE)
++    {
++        COM_HR_BEGIN(S_OK);
++        ComQIPtr<ITfSource> source(IID_ITfSource, openClose);
++        CHECK_HR(source->UnadviseSink(cookieOpenClose));
++        cookieOpenClose = TF_INVALID_COOKIE;
++        COM_HR_END();
++    }
+ }
+ 
+ HRESULT STDMETHODCALLTYPE InputModeHandler::OnChange(REFGUID rguid)
+ {
+     COM_HR_BEGIN(S_OK);
+ 
+-    if (IsEqualGUID(rguid, GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION))
++    if (IsEqualGUID(rguid, GUID_COMPARTMENT_KEYBOARD_INPUTMODE_CONVERSION) || IsEqualGUID(rguid, GUID_COMPARTMENT_KEYBOARD_OPENCLOSE))
+     {
+-        VARIANT var;
+-        mode->GetValue(&var);
++        const bool imeOpen = get_compartment_bool(openClose.get());
++        const int conv = get_compartment_int(mode.get());
+ 
+-        if (var.intVal & TF_CONVERSIONMODE_NATIVE)
++        const InputMode newMode = (!imeOpen)
++                                      ? InputMode::AlphaNumeric
++                                      : ((conv & TF_CONVERSIONMODE_NATIVE) ? InputMode::Native : InputMode::AlphaNumeric);
++        if (newMode != inputMode)
+         {
+-            inputMode = InputMode::Native;
++            inputMode = newMode;
++            inputCtx->InputModeCallbackHolder::runCallback(inputMode);
+         }
+-        else
+-            inputMode = InputMode::AlphaNumeric;
+-
+-        inputCtx->InputModeCallbackHolder::runCallback(inputMode);
+     }
+ 
+     COM_HR_END();

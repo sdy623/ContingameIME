@@ -5,12 +5,15 @@
   "package": "city.windmill.ingameime.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "MixinBookEditScreen",
     "MixinChatScreen",
     "MixinEditBox",
     "MixinEditScreen",
     "MixinFullScreen",
     "MixinKeyboardHandler",
     "MixinMinecraft",
+    "MixinScreen",
+    "MixinSignEditScreen",
     "MixinTextFieldWidget"
   ],
   "injectors": {

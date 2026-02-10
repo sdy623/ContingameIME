@@ -16,7 +16,8 @@ An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XP
 
 - Now works on the NeoForge loader (Minecraft 1.21-1.21.3).
 - Detects the active IME instead of brute-checking the client locale.
-- Candidate list uses a clear selection highlight.
+- Candidate list uses a clear selection highlight with customizable highlight color in config.
+- Fixed bug where IME candidate window would not display after toggling fullscreen and restarting.
 - Fixes caret tracking when Caxton or Modern UI is installed.
 - JNI DLL source and build parameters are included; project layout is refactored and managed via git submodules for better maintainability.
 
@@ -53,6 +54,14 @@ An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XP
 
 
 ### This Mod requires VCRuntime141 to run, download it on the official website of Microsoft [Download Link](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist)
+
+# Tested Environment
+
+This mod has been tested with the following IME:
+- Microsoft Pinyin IME
+- Japanese IME
+
+Other IME implementations may work but have not been fully tested.
 
 # This mod code reference/use
 
