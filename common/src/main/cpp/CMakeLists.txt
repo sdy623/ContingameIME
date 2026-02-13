@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(JNI REQUIRED)
 
 add_library(jni SHARED
-  city_windmill_ingameime_client_jni_ExternalBaseIME.cpp
+  city_sdy623_kitsuneime_client_jni_ExternalBaseIME.cpp
   ../../../../3rd/IngameIME_Win32/src/IngameIMEImpl.cpp
   ../../../../3rd/IngameIME_Win32/src/TfInputContextImpl.cpp
   ../../../../3rd/IngameIME_Win32/src/TfCompositionHandler.cpp
@@ -46,7 +46,7 @@ if (WIN32)
 endif()
 
 # Keep output next to the resources so it can be picked up by the mod.
-set(_jni_out_dir ${CMAKE_CURRENT_LIST_DIR}/../resources/assets/ingameime/natives)
+set(_jni_out_dir ${CMAKE_CURRENT_LIST_DIR}/../resources/assets/kitsuneime/natives)
 set_target_properties(jni PROPERTIES
   OUTPUT_NAME $<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,jni,jni-x86>
   RUNTIME_OUTPUT_DIRECTORY ${_jni_out_dir}

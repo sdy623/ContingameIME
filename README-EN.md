@@ -2,9 +2,11 @@
 
 <img height="150" width="150" src="icon/400x400.png"/>
 
-# XPlusContingameIME (Unofficial NeoForge Port)
+# ContingameIME-Neo (Unofficial NeoForge Port)
 
-An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XPlus-ContingameIME). Use input method in full screen Minecraft, with fixes and improvements over the original.
+An unofficial NeoForge port based on [XPlus-ContingameIME](https://github.com/Wudji/XPlus-ContingameIME), then further developed with reference to [IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft). 
+
+It also brings in the JNI library source authored and used by the Windmill-City author and manages it via git submodules, restoring JNI DLL source/build parameters and restructuring the project layout for better maintainability. Use input method in full screen Minecraft, with fixes and improvements over the original.
 
 **Note: This version only supports NeoForge. For the original version supporting both Fabric, please visit the [original project](https://github.com/Wudji/XPlus-ContingameIME)**
 
@@ -19,7 +21,6 @@ An unofficial NeoForge port of [XPlus-ContingameIME](https://github.com/Wudji/XP
 - Candidate list uses a clear selection highlight with customizable highlight color in config.
 - Fixed bug where IME candidate window would not display after toggling fullscreen and restarting.
 - Fixes caret tracking when Caxton or Modern UI is installed.
-- JNI DLL source and build parameters are included; project layout is refactored and managed via git submodules for better maintainability.
 
 # Preview
 

@@ -34,7 +34,25 @@
 git submodule update --init --recursive
 ```
 
-### 2) 构建 JNI (x64 + x86)
+### 2) 应用子模块补丁
+
+```powershell
+.\tools\apply_submodule_patches.ps1
+```
+
+### 3) 安装 Git Hooks
+
+```powershell
+.\tools\install_hooks.ps1
+```
+
+### 4) 切换分支前保存子模块改动
+
+```powershell
+git submodule foreach --recursive "git stash"
+```
+
+### 5) 构建 JNI (x64 + x86)
 
 ```powershell
 cmake -S common/src/main/cpp -B build/jni/x64 -A x64
@@ -47,10 +65,10 @@ cmake --build build/jni/x86 --config Release --target jni
 JNI DLL 会输出到：
 
 ```
-common/src/main/resources/assets/ingameime/natives
+common/src/main/resources/assets/kitsuneime/natives
 ```
 
-### 3) 构建模组
+### 6) 构建模组
 
 ```powershell
 .\gradlew.bat build

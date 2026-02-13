@@ -6,18 +6,20 @@ license="LGPL-3.0"
 [[mods]]
 modId="ingameime"
 version="${version}"
-displayName="XPlusContingameIME (Unofficial NeoForge Port)"
+displayName="ContingameIME-Neo"
 description='''
 An unofficial NeoForge port of XPlus-ContingameIME.
-Unofficial continuation of IngameIME - Enable IME in FullScreen Minecraft.
+Unofficial continuation of ContingameIME, then further developed with reference to IngameIME,
+Enable IME in FullScreen Minecraft.
+
 '''
 logoFile="icon.png"
 authors="ThinkingStudio, TexTrue, Wybxc, Windmill_City, Wudji, sdy623"
 credits="Hendrix-Shen"
-displayURL="https://github.com/Wudji/XPlus-ContingameIME"
+displayURL="https://github.com/sdy623/XPlus-ContingameIME"
 
 [[mixins]]
-config="ingameime.neoforge.mixins.json"
+config="kitsuneime.neoforge.mixins.json"
 
 [[dependencies.ingameime]]
 modId="neoforge"

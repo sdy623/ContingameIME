@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "city.sdy623.kitsuneime.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 0,
+    "maxShiftBy": 2
+  },
+  "plugin": "city.sdy623.kitsuneime.mixin.MixinConfigPlugin"
+}

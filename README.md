@@ -2,9 +2,11 @@
 
 <img height="150" width="150" src="icon/400x400.png"/>
 
-# XPlusContingameIME (Unofficial NeoForge Port)
+# ContingameIME-Neo (Unofficial NeoForge Port)
 
-本模组是 [IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft) 的非官方 NeoForge 移植版本。在全屏的Minecraft中使用输入法，并在原版基础上进行了一些修复和改进。
+本模组是基于 [XPlus-ContingameIME](https://github.com/Wudji/XPlus-ContingameIME) 的 NeoForge 非官方移植版本，并在此基础上参考 [IngameIME](https://github.com/Windmill-City/IngameIME-Minecraft) 持续开发；
+
+同时引入 Windmill-City 作者本人编写使用的 JNI 库源码并以 git submodules 管理，找回 JNI DLL 源代码与构建参数、重构项目目录，以增强可维护性。在全屏的Minecraft中使用输入法，并在原版基础上进行了一些修复和改进。
 
 **注意：本版本仅支持 NeoForge 平台。支持 Fabric 的版本请访问 [原项目](https://github.com/Wudji/XPlus-ContingameIME)**
 
@@ -19,7 +21,6 @@ ZH-CN / [EN-US](README-EN.md)
 - 候选框选中项高亮显示，高亮颜色可在配置中自定义。
 - 修复了切换全屏重启后 IME 候选框不显示的 bug。
 - 修复安装 Caxton 和 Modern UI 后输入框不跟随光标的 bug。
-- 找回 JNI DLL 源代码与构建参数，重构项目目录，并使用 git submodules 管理以增强可维护性。
 
 # 图片展示
 

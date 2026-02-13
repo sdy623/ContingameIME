@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "plugin": "city.sdy623.kitsuneime.fabric.mixin.MixinConfigPlugin",
+  "minVersion": "0.8",
+  "package": "city.sdy623.kitsuneime.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MixinBookEditScreen",
+    "MixinChatScreen",
+    "MixinEditBox",
+    "MixinEditScreen",
+    "MixinFullScreen",
+    "MixinKeyboardHandler",
+    "MixinMinecraft",
+    "MixinScreen",
+    "MixinSignEditScreen",
+    "MixinTextFieldWidget"
+  ],
+  "injectors": {
+    "defaultRequire": 0,
+    "maxShiftBy": 2
+  }
+}

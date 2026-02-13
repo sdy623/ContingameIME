@@ -16,4 +16,4 @@ include("common")
 include("fabric")
 include("neoforge")
 
-rootProject.name = "ContingameIME"
+rootProject.name = "ContingameIME-Neo"

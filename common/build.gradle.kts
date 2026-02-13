@@ -8,7 +8,7 @@ architectury {
 }
 
 loom {
-    accessWidenerPath.set(file("src/main/resources/ingameime.accesswidener"))
+    accessWidenerPath.set(file("src/main/resources/kitsuneime.accesswidener"))
 }
 
 dependencies {

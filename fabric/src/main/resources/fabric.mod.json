@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "id": "ingameime",
   "version": "${version}",
-  "name": "XPlus ContingameIME",
+  "name": "ContingameIME-Neo",
   "description": "An unofficial continuation of an unofficial continuation of IngameIME.\nEnable IME in FullScreen Minecraft",
   "authors": [
-    "ThinkingStudio, TexTrue, Wybxc", "Windmill_City", "Wudji"
+    "ThinkingStudio, TexTrue, Wybxc", "Windmill_City", "Wudji", "sdy623"
   ],
   "contributors": [
     "Hendrix-Shen"
   ],
   "contact": {
-    "sources": "https://github.com/Wudji/XPlus-ContingameIME",
-    "issues": "https://github.com/Wudji/XPlus-ContingameIME/issues"
+    "sources": "https://github.com/sdy623/XPlus-ContingameIME",
+    "issues": "https://github.com/sdy623/XPlus-ContingameIME/issues"
   },
   "license": "LGPL-3.0",
   "icon": "icon.png",
@@ -21,13 +21,13 @@
     "client": [
       {
         "adapter": "kotlin",
-        "value": "city.windmill.ingameime.fabric.IngameIMEClientFabric"
+        "value": "city.sdy623.kitsuneime.fabric.KitsuneIMEClientFabric"
       }
     ]
   },
   "mixins": [
     {
-      "config": "ingameime.fabric.mixins.json",
+      "config": "kitsuneime.fabric.mixins.json",
       "environment": "client"
     }
   ],
