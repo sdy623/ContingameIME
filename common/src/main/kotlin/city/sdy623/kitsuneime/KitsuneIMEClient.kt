@@ -111,7 +111,7 @@ object KitsuneIMEClient {
                 prevY = mouseY
             }
 
-            OverlayScreen.render(matrices, mouseX, mouseY, delta.gameTimeDeltaTicks)
+            OverlayScreen.render(matrices, mouseX, mouseY, delta)
         })
         ClientScreenEventHooks.SCREEN_MOUSE_MOVE.register(ClientScreenEventHooks.MouseMove { _, _, _, _ ->
             IMEHandler.IMEState.onMouseMove()

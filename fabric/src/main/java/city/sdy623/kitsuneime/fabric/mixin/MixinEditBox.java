@@ -82,6 +82,7 @@ abstract class MixinEditBox extends AbstractWidget {
         int x2 = args.get(2);
         int y2 = args.get(3);
         if (x2 - x1 <= 1 && y2 - y1 >= 1) {
+            syncEditState(x1, y1);
             ClientScreenEventHooks.INSTANCE.getEDIT_CARET().invoker().onEditCaret(this, new Pair<>(x1, y1));
         }
     }
@@ -103,6 +104,15 @@ abstract class MixinEditBox extends AbstractWidget {
         int y = this.getY();
         int caretX = computeCaretX();
         int caretY = bordered ? y + (height - 8) / 2 : y;
+        syncEditState(caretX, caretY);
         ClientScreenEventHooks.INSTANCE.getEDIT_CARET().invoker().onEditCaret(this, new Pair<>(caretX, caretY));
+    }
+
+    private void syncEditState(int caretX, int caretY) {
+        if (isFocused() && isEditable) {
+            ClientScreenEventHooks.INSTANCE.getEDIT_OPEN().invoker().onEditOpen(this, new Pair<>(caretX, caretY));
+        } else {
+            ClientScreenEventHooks.INSTANCE.getEDIT_CLOSE().invoker().onEditClose(this);
+        }
     }
 }
